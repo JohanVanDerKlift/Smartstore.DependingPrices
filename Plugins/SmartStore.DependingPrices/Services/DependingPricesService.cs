@@ -123,12 +123,12 @@ namespace SmartStore.DependingPrices.Services
                 foreach (var role in customerRoles)
                     if (roles.Contains(role.Id))
                     {
-                    tempDependingPrice = (from gp in _cbRepository.Table                                          
-                                          where gp.CustomerGroupId == role.Id
-                                          && gp.ProductId == productId
-                                          && gp.Quantity <= quantity
-                                          orderby gp.Quantity descending
-                                          select gp).ToList().FirstOrDefault();
+                        tempDependingPrice = (from gp in _cbRepository.Table                                          
+                                              where gp.CustomerGroupId == role.Id
+                                              && gp.ProductId == productId
+                                              && gp.Quantity <= quantity
+                                              orderby gp.Quantity descending
+                                              select gp).ToList().FirstOrDefault();
 
                         if (tempDependingPrice != null && (dependingPrice == null || tempDependingPrice.Price > dependingPrice.Price))
                         {                            
@@ -241,7 +241,11 @@ namespace SmartStore.DependingPrices.Services
             // 7 - If no parameters are specified, special price
             tempDependingPrice = (from gp in _cbRepository.Table
                                   where gp.CustomerNumber == "0"
-                                  orderby gp.Price
+                                  && gp.CustomerGroupId == 0
+                                  && gp.ProductId == 0
+                                  && gp.ItemGroupId == 0
+                                  && gp.Quantity <= quantity
+                                  orderby gp.Quantity
                                   select gp).ToList().FirstOrDefault();
 
             if (tempDependingPrice != null && (dependingPrice == null || tempDependingPrice.Price > dependingPrice.Price))
