@@ -1,0 +1,13 @@
+﻿<select 
+    name="CustomerGroup" 
+    id="CustomerGroup" 
+	class="form-control"
+    data-placeholder='@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.AllRoles")'
+    data-select-url='@Url.Action("AllCustomerRoles", "CustomerRole", new { area = "Admin" })'>
+</select>
+
+<script>
+    $(function () {
+		$('#CustomerGroup').selectWrapper();
+    });
+</script>

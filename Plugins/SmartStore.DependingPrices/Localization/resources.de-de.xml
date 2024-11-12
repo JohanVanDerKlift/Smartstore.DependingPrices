@@ -1,0 +1,115 @@
+﻿<Language Name="Deutsch" IsDefault="true" IsRightToLeft="false">
+	<LocaleResource Name="Plugins.FriendlyName.Widgets.DependingPrices" AppendRootKey="false">
+		<Value>Preis-Abhängigkeiten</Value>
+	</LocaleResource>
+	<LocaleResource Name="Plugins.SmartStore.DependingPrices" AppendRootKey="false">
+		<Children>
+			<LocaleResource Name="AdminInstruction">
+				<Value>
+					<![CDATA[
+			      <p>
+				      Navigieren Sie zur Konfiguration dieses Plugin in das jeweilige Produkt, für das Sie Preise basierend auf zugeordneten Benutzergruppen, Stores oder Sprachen definieren wollen 
+				      und geben Sie die abweichenden Preise in diesem Tab an.
+			      </p>
+			      <h6>Produktgruppen</h6>
+			      <p>
+				      Mit der Verwaltung Ihrer Preise über Produktgruppen können Sie viel Konfigurationsaufwand sparen. 
+				      Hinterlegen Sie hier die Preise für eine Produktgruppe und definieren Sie auf Produktebene nur noch die entsprechende Produktgruppen-ID.
+			      </p>
+            <h6>Import</h6>
+            <p>
+              Um Datensätze für dieses Plugin zu importieren, führen Sie einen normalen Import durch <b>Admin > Konfiguration > Importieren</b>.
+              Wählen Sie als Schlüsselfeld das Feld ID.
+              Die zu importierende Datei muss folgende Felder enthalten <br>
+              <i>ID, DP_ItemGroupId, DP_CustomerGroupId, DP_LanguageId, DP_StoreId, DP_CustomerNumber, DP_Price, DP_CalculationMethod</i>
+              <br>
+              Ein Beispieldatei können Sie <a href="{0}">hier</a> herunterladen.
+            </p>
+          ]]>
+				</Value>
+			</LocaleResource>
+			<LocaleResource Name="Tab.Configuration">
+				<Value>Einstellungen</Value>
+			</LocaleResource>
+			<LocaleResource Name="Tab.ItemGroups">
+				<Value>Produktgruppen</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerNumber">
+				<Value>Kundennummer</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerGroupId">
+				<Value>Kundengruppe</Value>
+			</LocaleResource>
+			<LocaleResource Name="LanguageId">
+				<Value>Sprache</Value>
+			</LocaleResource>
+			<LocaleResource Name="StoreId">
+				<Value>Shop</Value>
+			</LocaleResource>
+			<LocaleResource Name="Price">
+				<Value>Preis</Value>
+			</LocaleResource>
+			<LocaleResource Name="CalculationMethod">
+				<Value>Berechnungsmethode</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerRolesForProductCost">
+				<Value>Kundengruppen für Einkaufpreis</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerRolesForProductCost.Hint">
+				<Value>Bestimmen Sie hier die Kundengruppen, denen der Einkaufspreis von Produkten berechnet werden soll.</Value>
+			</LocaleResource>
+			<LocaleResource Name="HideTierPrices">
+				<Value>Staffelpreise verstecken</Value>
+			</LocaleResource>
+			<LocaleResource Name="HideTierPrices.Hint">
+				<Value>Bestimmen Sie hier, ob Staffelpreise versteckt werden, wenn abweichende Preise definert wurden.</Value>
+			</LocaleResource>
+			<LocaleResource Name="ApplyTierPriceAsBase">
+				<Value>Staffelpreis als Basis verwenden</Value>
+			</LocaleResource>
+			<LocaleResource Name="ApplyTierPriceAsBase.Hint">
+				<Value>Bestimmen Sie hier, ob der Staffelpreis als Basis für die Preisberechnung verwendet werden soll, wenn für die Kundengruppe des Kunden ein Staffelpreis mit der Menge 1 hinterlegt ist.</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerRolesForPriceSupression">
+				<Value>Kundengruppen für Preisunterdrückung</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerRolesForPriceSupression.Hint">
+				<Value>Bestimmen Sie hier die Kundengruppen, bei denen kein Preis dargestellt werden soll, wenn kein Kriterium für diese Kundengruppe festgelegt wurde.</Value>
+			</LocaleResource>
+
+			<LocaleResource Name="ProcessVariantCombinations">
+				<Value>Variant-Kombinationen berücksichtigen</Value>
+			</LocaleResource>
+			<LocaleResource Name="ProcessVariantCombinations.Hint">
+				<Value>Bestimmen Sie hier, Preise von Attributkombinationen verarbeitet werden, sofern für das Produkt eine Auf- oder Abpreis oder eine prozentuale Anpassung festgelegt wurde.</Value>
+			</LocaleResource>
+			
+			<LocaleResource Name="AddNewCriteria">
+				<Value>Neues Kriterium zufügen oder bestehendes aktualisieren</Value>
+			</LocaleResource>
+			<LocaleResource Name="ItemGroupId">
+				<Value>Produktgruppen-ID</Value>
+			</LocaleResource>
+			<LocaleResource Name="ItemGroupId.Hint">
+				<Value>Mit der Produktgruppen-ID lässt sich das Produkt einer Produktgruppe zuordnen, für die Preisabhängigkaiten global in der Pluginkonfiguration hinterlegt werden können.</Value>
+			</LocaleResource>
+			<LocaleResource Name="Quantity">
+				<Value>Menge</Value>
+			</LocaleResource>
+			
+		</Children>
+	</LocaleResource>
+	<LocaleResource Name="Enums.SmartStore.DependingPrices.Domain.DependingPriceCalculationMethod" AppendRootKey="false">
+		<Children>
+			<LocaleResource Name="Adjustment">
+				<Value>Auf-/Abpreis</Value>
+			</LocaleResource>
+			<LocaleResource Name="Fixed">
+				<Value>Fester Wert</Value>
+			</LocaleResource>
+			<LocaleResource Name="Percental">
+				<Value>Prozentual</Value>
+			</LocaleResource>
+		</Children>
+	</LocaleResource>
+</Language>

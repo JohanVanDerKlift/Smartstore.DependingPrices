@@ -1,0 +1,55 @@
+﻿@model IEnumerable<TaxProviderModel>
+@{    
+    ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
+}
+
+@Html.AntiForgeryToken()
+
+<div class="section-header">
+    <div class="title">
+        @T("Admin.Configuration.Tax.Providers")
+    </div>
+</div>
+
+<div>
+	@Html.ProviderList(Model,
+	@<a style="min-width: 250px" href="@Url.Action("ActivateProvider", new { systemName = item.SystemName })"
+        data-systemname="@item.SystemName" data-activate="@(!item.IsPrimaryTaxProvider ? "true" : "false")"
+		class="activate-provider btn@(item.IsPrimaryTaxProvider ? " btn-success" : " btn-secondary btn-to-danger")">
+		@if (item.IsPrimaryTaxProvider)
+		{
+			<i class="fa fa-check"></i>
+			<span>@T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider")</span>
+		}
+		else
+		{
+			<span>@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</span>
+		}
+	</a>)
+</div>
+			
+<script>
+    $(function () {
+        var token = $('input[name="__RequestVerificationToken"]').val();
+
+        $(".activate-provider").on("click", function (e) {
+            e.preventDefault();
+
+            var $el = $(this);
+            
+            $({}).doAjax({
+			    type: 'POST',
+			    url: '@Url.Action("ActivateProvider")',
+                data: {
+                    "__RequestVerificationToken": token,
+                    "systemName": $el.attr("data-systemname")
+                },
+			    callbackSuccess: function () {
+                    location.reload();
+			    }
+            });
+
+            return false;
+        })
+    });
+</script>

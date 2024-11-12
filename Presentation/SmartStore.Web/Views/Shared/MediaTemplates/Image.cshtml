@@ -1,0 +1,8 @@
+﻿@model MediaTemplateModel
+
+@using SmartStore.Web.Framework.Modelling;
+
+<img src="@Model.File.GetUrl(Model.RenderViewer ? 0 : Model.ThumbSize)"
+     @Html.Attrs(Model.HtmlAttributes.AppendCssClass("file-img"))
+     alt="@Model.Alt.NullEmpty()"
+     title="@Model.Title.NullEmpty()" />

@@ -1,0 +1,112 @@
+﻿<Language Name="English" IsDefault="false" IsRightToLeft="false">
+	<LocaleResource Name="Plugins.FriendlyName.Widgets.DependingPrices" AppendRootKey="false">
+		<Value>Depending prices</Value>
+	</LocaleResource>
+	<LocaleResource Name="Plugins.SmartStore.DependingPrices" AppendRootKey="false">
+		<Children>
+			<LocaleResource Name="AdminInstruction">
+				<Value>
+					<![CDATA[
+			    <p>
+				    To configure this plugin navigate to the respective product for which you want to define prices based on customer roles
+				    and define the prices in the tab group prices.
+			    </p>
+			    <h6>Product Groups</h6>
+			    <p>
+				    By managing your prices via product groups, you can save a lot of configuration effort. 
+				    Enter the prices for a product group here and define only the corresponding item group ID at product level.
+			    </p>
+          <h6>Import</h6>
+          <p>
+            To import records for this plugin, do a normal import <b>Admin > Configuration > Import</b>.
+            Select the ID field as the key field.
+            The file to be imported must contain the following fields <br>
+            <i>ID, DP_ItemGroupId, DP_CustomerGroupId, DP_LanguageId, DP_StoreId, DP_CustomerNumber, DP_Price, DP_CalculationMethod</i>
+            <br>
+            You can download an example file <a href="{0}">here</a>.
+          </p>
+          ]]>
+				</Value>
+			</LocaleResource>
+			<LocaleResource Name="Tab.Configuration">
+				<Value>Settings</Value>
+			</LocaleResource>
+			<LocaleResource Name="Tab.ItemGroups">
+				<Value>Item groups</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerNumber">
+				<Value>Customer number</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerGroupId">
+				<Value>Customer role</Value>
+			</LocaleResource>
+			<LocaleResource Name="LanguageId">
+				<Value>Language</Value>
+			</LocaleResource>
+			<LocaleResource Name="StoreId">
+				<Value>Shop</Value>
+			</LocaleResource>
+			<LocaleResource Name="Price">
+				<Value>Price</Value>
+			</LocaleResource>
+			<LocaleResource Name="CalculationMethod">
+				<Value>Calculation method</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerRolesForProductCost">
+				<Value>Customer roles for purchase price</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerRolesForProductCost.Hint">
+				<Value>Here you specify the customer roles for which the purchase price of products is to be calculated.</Value>
+			</LocaleResource>
+			<LocaleResource Name="HideTierPrices">
+				<Value>Hide tiered prices</Value>
+			</LocaleResource>
+			<LocaleResource Name="HideTierPrices.Hint">
+				<Value>Specify here whether tiered prices are hidden if alternative prices have been defined.</Value>
+			</LocaleResource>
+			<LocaleResource Name="ApplyTierPriceAsBase">
+				<Value>Apply tiered prices as base</Value>
+			</LocaleResource>
+			<LocaleResource Name="ApplyTierPriceAsBase.Hint">
+				<Value>Specify whether the tiered price is to be used as the basis for price calculation if a tiered price with quantity 1 is defined for the customer group of the customer.</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerRolesForPriceSupression">
+				<Value>Customer roles for price supression</Value>
+			</LocaleResource>
+			<LocaleResource Name="CustomerRolesForPriceSupression.Hint">
+				<Value>Specify the customer roles for which no price is to be displayed if no criterion has been set for this customer role.</Value>
+			</LocaleResource>
+			<LocaleResource Name="ProcessVariantCombinations">
+				<Value>Process variant combinations</Value>
+			</LocaleResource>
+			<LocaleResource Name="ProcessVariantCombinations.Hint">
+				<Value>Determine here, prices of attribute combinations are processed, if an adjustmen or percentage adjustment has been set for the product.</Value>
+			</LocaleResource>
+			<LocaleResource Name="AddNewCriteria">
+				<Value>Add a new criteria or update an existing one</Value>
+			</LocaleResource>
+			<LocaleResource Name="ItemGroupId">
+				<Value>Group item ID</Value>
+			</LocaleResource>
+			<LocaleResource Name="ItemGroupId.Hint">
+				<Value>With the group item ID, the product can be assigned to a product group for which price dependencies can be stored globally in the plug-in configuration.</Value>
+			</LocaleResource>
+			<LocaleResource Name="Quantity">
+				<Value>Quantity</Value>
+			</LocaleResource>
+		</Children>
+	</LocaleResource>
+	<LocaleResource Name="Enums.SmartStore.DependingPrices.Domain.DependingPriceCalculationMethod" AppendRootKey="false">
+		<Children>
+			<LocaleResource Name="Adjustment">
+				<Value>Adjustment</Value>
+			</LocaleResource>
+			<LocaleResource Name="Fixed">
+				<Value>Fixed</Value>
+			</LocaleResource>
+			<LocaleResource Name="Percental">
+				<Value>Percental</Value>
+			</LocaleResource>
+		</Children>
+	</LocaleResource>
+</Language>

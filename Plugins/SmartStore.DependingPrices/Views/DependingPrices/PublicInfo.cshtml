@@ -1,0 +1,16 @@
+﻿@model SmartStore.DependingPrices.Models.PublicInfoModel
+@{
+	Layout = "";
+
+	if (Model.HideTierPrices)
+	{
+		Html.AddBodyCssClass("has-depending-prices");
+	}
+
+	if (Model.HidePrice)
+	{
+		Html.AddBodyCssClass("hide-price");
+	}
+}
+
+

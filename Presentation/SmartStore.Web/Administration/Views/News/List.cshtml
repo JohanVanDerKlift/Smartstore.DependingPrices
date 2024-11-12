@@ -1,0 +1,233 @@
+﻿@model NewsItemListModel
+@using Telerik.Web.Mvc.UI
+@{
+    ViewBag.Title = T("Admin.ContentManagement.News.NewsItems").Text;
+}
+
+@Html.AntiForgeryToken()
+
+<div class="section-header">
+    <div class="title">
+        <i class="far fa-newspaper"></i>
+        @T("Admin.ContentManagement.News.NewsItems")
+    </div>
+    <div class="options">
+        @{ Html.RenderWidget("admin_button_toolbar_before"); }
+
+        <button type="button" class="btn btn-outline-secondary btn-toggle-filter" data-toggle="button" aria-pressed="false">
+            <i class="fa fa-filter"></i>
+            <span>@T("Common.Filter")</span>
+            <i class="fa fa-angle-double-down"></i>
+        </button>
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="fa fa-plus"></i>
+            <span>@T("Admin.Common.AddNew")</span>
+        </a>
+        <button type="submit" id="delete-selected" name="delete-selected" value="delete_selected" class="btn btn-danger">
+            <i class="far fa-trash-alt"></i>
+            <span>@T("Admin.Common.Delete.Selected")</span>
+        </button>
+
+        @{ Html.RenderWidget("admin_button_toolbar_after"); }
+    </div>
+</div>
+
+<div class="row mt-3 grid-filter" style="display: none">
+    <div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+        @Html.SmartLabelFor(model => model.SearchTitle)
+        @Html.TextBoxFor(model => Model.SearchTitle, new { @class = "form-control" })
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+        @Html.SmartLabelFor(model => model.SearchShort)
+        @Html.TextBoxFor(model => Model.SearchShort, new { @class = "form-control" })
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+        @Html.SmartLabelFor(model => model.SearchFull)
+        @Html.TextBoxFor(model => Model.SearchFull, new { @class = "form-control" })
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+        @Html.SmartLabelFor(model => model.SearchStartDate)
+        @Html.EditorFor(model => model.SearchStartDate)
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+        @Html.SmartLabelFor(model => model.SearchEndDate)
+        @Html.EditorFor(model => model.SearchEndDate)
+    </div>
+    @if (!Model.IsSingleStoreMode)
+    {
+        <div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+            @Html.SmartLabelFor(model => model.SearchStoreId)
+            @Html.EditorFor(model => model.SearchStoreId)
+        </div>
+    }
+    @if (!Model.IsSingleLanguageMode)
+    {
+        <div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+            @Html.SmartLabelFor(model => model.SearchLanguageId)
+            @Html.DropDownListFor(model => model.SearchLanguageId, Model.AvailableLanguages, T("Common.International"))
+        </div>
+    }
+    <div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+        @Html.SmartLabelFor(model => model.SearchIsPublished)
+        @Html.EditorFor(model => model.SearchIsPublished)
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 form-group ml-auto">
+        @Html.SmartLabel(string.Empty, string.Empty)
+        <button type="submit" id="search-newsitem" value="search-newsitem" class="btn btn-warning btn-block">
+            <span>@T("Admin.Common.ApplyFilter")</span>
+        </button>
+    </div>
+</div>
+
+<div>
+    @(Html.Telerik().Grid<NewsItemModel>()
+            .Name("newsitem-grid")
+            .Columns(columns =>
+            {
+                columns.Bound(x => x.Id)
+                    .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
+                    .Title("<input id='mastercheckbox' type='checkbox'/>")
+                    .HtmlAttributes(new { style = "text-align:center" })
+                    .HeaderHtmlAttributes(new { style = "text-align:center" });
+                columns.Bound(x => x.Title)
+                    .ClientTemplate("<a href=\"Edit/<#= Id #>\"><#= Title #></a>");
+                columns.Bound(x => x.Published)
+                    .ClientTemplate(Html.SymbolForBool("Published"))
+                    .Centered();
+                columns.Bound(x => x.LanguageName)
+                    .Hidden(Model.IsSingleLanguageMode);
+                columns.Bound(x => x.Comments)
+                    .ClientTemplate("<div><a href=\"Comments?filterByNewsItemId=<#= Id #>\">" + T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text + " - <#= Comments #>" + "</a></div>");
+                columns.Bound(x => x.StartDate);
+                columns.Bound(x => x.EndDate);
+                columns.Bound(x => x.LimitedToStores)
+                    .ClientTemplate(Html.SymbolForBool("LimitedToStores"))
+                    .Hidden(Model.IsSingleStoreMode)
+                    .Centered();
+                columns.Bound(x => x.CreatedOn);
+            })
+            .Pageable(settings => settings.PageSize(Model.GridPageSize).Position(GridPagerPosition.Both))
+            .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "News"))
+            .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound").OnRowDataBound("onRowDataBound"))
+            .PreserveGridState()
+            .EnableCustomBinding(true))
+</div>
+
+<script>
+	var selectedIds = [];
+
+    $(function () {
+        // Filter toggler.
+		$('.btn-toggle-filter').on('click', function (e) {
+			$('.grid-filter').slideToggle({ duration: 200, easing: 'ease-in-out' });
+		});
+
+        // Search button.
+        $('#search-newsitem').click(function () {
+            //search
+            var grid = $('#newsitem-grid').data('tGrid');
+            //no paging support in this grid
+            grid.currentPage = 1; //new search. Set page size to 1
+            grid.ajaxRequest();
+        	//clear selected checkboxes
+            $('.checkboxGroups').attr('checked', false).change();
+            selectedIds = [];
+            return false;
+        });
+
+    	// "Delete selected" button
+        $('#delete-selected').click(function (e) {
+        	e.preventDefault();
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+        	$.ajax({
+        		cache:false,
+        		type: "POST",
+        		url: "@(Url.Action("DeleteSelected", "News"))",
+        		data: {
+                    selectedIds: selectedIds,
+                    __RequestVerificationToken: token
+        	    },
+        		complete: function (data) {
+        			// Reload grid.
+        			var grid = $('#newsitem-grid').data('tGrid');
+        			grid.currentPage = 1;
+        			grid.ajaxRequest();
+        			// Clear selected checkboxes.
+        			$('.checkboxGroups').attr('checked', false).change();
+        			selectedIds = [];
+        		},
+        		error:function (xhr, ajaxOptions, thrownError){
+        			alert(thrownError);
+        		},
+        		traditional: true
+			});
+			return false;
+        });
+
+    	$('#mastercheckbox').click(function () {
+    		$('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+    	});
+
+    	// Wire up checkboxes.
+    	$(document).on('change', '#newsitem-grid input[type=checkbox][id!=mastercheckbox]', function (e) {
+    		var $check = $(this);
+    		if ($check.is(":checked") == true) {
+    			var checked = jQuery.inArray($check.val(), selectedIds);
+    			if (checked == -1) {
+    				// Add id to selectedIds.
+    				selectedIds.push($check.val());
+    			}
+    		}
+    		else {
+    			var checked = jQuery.inArray($check.val(), selectedIds);
+    			if (checked > -1) {
+    				// Remove id from selectedIds.
+    				selectedIds = $.grep(selectedIds, function (item, index) {
+    					return item != $check.val();
+    				});
+    			}
+    		}
+    		updateMasterCheckbox();
+    	});
+
+    });
+
+    function onDataBinding(e) {
+        var searchModel = {
+            SearchTitle: $('#@Html.FieldIdFor(model => model.SearchTitle)').val(),
+			SearchIntro: $('#SearchShort').val(),
+            SearchBody: $('#SearchFull').val(),
+            SearchStartDate: $('#SearchStartDate').val(),
+			SearchEndDate: $('#SearchEndDate').val(),
+            SearchStoreId: $('#SearchStoreId').val(),
+            SearchIsPublished: $('#SearchIsPublished').val(),
+            SearchLanguageId: $('#SearchLanguageId').val()
+        };
+        e.data = searchModel;
+    }
+
+    function onRowDataBound(e) {
+    	if (!e.dataItem.Published) {
+    		$(e.row).find('td').wrapInner('<span class="muted" />');
+    	}
+    }
+
+    function onDataBound(e) {
+    	$('#newsitem-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+    		var currentId = $(this).val();
+    		var checked = jQuery.inArray(currentId, selectedIds);
+    		// Set checked based on if current checkbox's value is in selectedIds.
+    		$(this).attr('checked', checked > -1);
+    	});
+
+    	updateMasterCheckbox();
+    }
+
+    function updateMasterCheckbox() {
+    	var numChkBoxes = $('#newsitem-grid input[type=checkbox][id!=mastercheckbox]').length;
+    	var numChkBoxesChecked = $('#newsitem-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+    	$('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+    }
+</script>

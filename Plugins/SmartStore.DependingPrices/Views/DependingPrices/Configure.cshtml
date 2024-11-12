@@ -1,0 +1,89 @@
+﻿@model SmartStore.DependingPrices.Models.ConfigurationModel
+@using SmartStore.Web.Framework;
+@using SmartStore.Web.Framework.UI;
+
+@{
+	Layout = "";
+}
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+<div class="plugin-actions">
+	<button id="SaveConfigButton" type="submit" name="save" class="btn btn-warning" value="save">
+		<i class="fa fa-check"></i>
+		<span>@T("Admin.Common.Save")</span>
+	</button>
+</div>
+
+<div class="alert alert-info">
+	@Html.Raw(@T("Plugins.SmartStore.DependingPrices.AdminInstruction", Url.Content("~/Plugins/SmartStore.DependingPrices/Content/DP Sample.xlsx")))
+</div>
+
+@using (Html.BeginForm())
+{
+	@Html.SmartStore().TabStrip().Name("depending-prices-edit").Style(TabsStyle.Material).Position(TabsPosition.Top).Items(x =>
+	{
+		x.Add().Text(T("Plugins.SmartStore.DependingPrices.Tab.Configuration").Text).Content(TabConfig()).Selected(true);
+		x.Add().Text(T("Plugins.SmartStore.DependingPrices.Tab.ItemGroups").Text).Content(TabItemGroups());
+	})
+}
+
+@helper TabConfig()
+{
+	<table class="adminContent">
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.CustomerRolesForProductCost)
+			</td>
+			<td class="adminData">
+				<input type="hidden" name="newCustomerRolesForProductCost" />
+				@Html.SettingEditorFor(model => model.CustomerRolesForProductCost, 
+					Html.ListBoxFor(model => model.CustomerRolesForProductCost, Model.AvailableCustomerRoles, new { multiple = "multiple", @class = "control-xlarge" }))
+				@Html.ValidationMessageFor(model => model.CustomerRolesForProductCost)
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.CustomerRolesForPriceSupression)
+			</td>
+			<td class="adminData">
+				<input type="hidden" name="newCustomerRolesForPriceSupression" />
+				@Html.SettingEditorFor(model => model.CustomerRolesForPriceSupression, 
+					Html.ListBoxFor(model => model.CustomerRolesForPriceSupression, Model.AvailableCustomerRoles2, new { multiple = "multiple", @class = "control-xlarge" }))
+				@Html.ValidationMessageFor(model => model.CustomerRolesForPriceSupression)
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.ApplyTierPriceAsBase)
+			</td>
+			<td class="adminData">
+				@Html.SettingEditorFor(model => model.ApplyTierPriceAsBase)
+				@Html.ValidationMessageFor(model => model.ApplyTierPriceAsBase)
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.HideTierPrices)
+			</td>
+			<td class="adminData">
+				@Html.SettingEditorFor(model => model.HideTierPrices)
+				@Html.ValidationMessageFor(model => model.HideTierPrices)
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.SmartLabelFor(model => model.ProcessVariantCombinations)
+			</td>
+			<td class="adminData">
+				@Html.SettingEditorFor(model => model.ProcessVariantCombinations)
+				@Html.ValidationMessageFor(model => model.ProcessVariantCombinations)
+			</td>
+		</tr>
+	</table>
+}
+
+@helper TabItemGroups()
+{
+	@Html.Action("DependingPricesEditTab", "DependingPrices", new { productId = -1, area = "SmartStore.DependingPrices" })
+}

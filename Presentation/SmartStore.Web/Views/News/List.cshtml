@@ -1,0 +1,34 @@
+﻿@model NewsItemListModel
+@using SmartStore.Web.Models.News;
+@using SmartStore.Web.Framework.UI;
+@using SmartStore.Core.Domain.Seo;
+
+@{
+    Layout = "_Layout";
+    Html.AddTitleParts(Model.MetaTitle);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var newsUrl = Url.RouteUrl("NewsArchive", null, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(newsUrl);
+    }
+}
+
+<div class="page news-list-page">
+    @{ Html.RenderPartial("NewsSummaryHeading", Model); }
+
+    <div class="page-body">
+        @{ Html.RenderWidget("newslist_page_before_items"); }
+
+        <div class="news-items mb-5 row">
+            @{ Html.RenderPartial("NewsSummaryList", Model); }
+        </div>
+
+        @Html.SmartStore().Pager(Model.PagingFilteringContext).Alignment(PagerAlignment.Centered).Size(PagerSize.Large).QueryParam("pagenumber")
+
+        @{ Html.RenderWidget("newslist_page_after_items"); }
+    </div>
+</div>

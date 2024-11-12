@@ -1,0 +1,16 @@
+﻿@model SmartStore.DependingPrices.Models.PublicInfoModel
+@{
+	Layout = "";
+}
+
+@if (Model.HidePrice)
+{
+	<style>
+		.art[data-id='@Model.ProductId'] .art-price-block,
+		.art[data-id='@Model.ProductId'] a[data-type='cart'] {
+			display:none;
+		}
+	</style>
+}
+
+

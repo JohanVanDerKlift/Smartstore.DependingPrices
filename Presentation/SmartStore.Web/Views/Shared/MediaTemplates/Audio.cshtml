@@ -1,0 +1,14 @@
+﻿@model MediaTemplateModel
+
+@using SmartStore.Web.Framework.Modelling;
+
+@if (Model.RenderViewer)
+{
+    <div @Html.Attrs(Model.HtmlAttributes.AppendCssClass("embed-responsive embed-responsive-16by9 w-100 file-preview-container"))>
+        <audio class="file-preview" src="@Model.File.GetUrl()" controls preload="metadata" />
+    </div>
+}
+else
+{
+    @Html.Partial("MediaTemplates/_Thumbnail", Model)
+}

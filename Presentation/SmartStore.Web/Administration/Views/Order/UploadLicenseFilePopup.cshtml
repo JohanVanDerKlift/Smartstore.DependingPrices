@@ -1,0 +1,45 @@
+﻿@model OrderModel.UploadLicenseModel
+
+@{
+    Layout = "_AdminPopupLayout";
+    ViewBag.Title = T("Admin.Orders.Products.License.UploadFile").Text;
+}
+
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <i class="fa fa-upload"></i>
+            @T("Admin.Orders.Products.License.UploadFile")
+        </div>
+        <div class="options">
+        </div>
+    </div>
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+
+    @Html.HiddenFor(model => model.OrderId)
+    @Html.HiddenFor(model => model.OrderItemId)
+    @Html.HiddenFor(model => model.OldLicenseDownloadId)
+
+    <div class="adminContent">
+        <div class="adminRow">
+            @Html.EditorFor(model => model.LicenseDownloadId, new { @class = "w-100" })
+        </div>
+        <div class="adminRow pl-5">
+            <button type="submit" name="uploadlicense" id="uploadlicense" value="uploadlicense" class="btn btn-warning mr-2">
+                <i class="fa fa-check"></i>
+                <span>@T("Admin.Common.Save")</span>
+            </button>
+
+            @if (Model.LicenseDownloadId > 0)
+            {
+                <button type="submit" name="deletelicense" id="deletelicense" value="deletelicense" class="btn btn-danger">
+                    <i class="far fa-trash-alt"></i>
+                    <span>@T("Admin.Common.Delete")</span>
+                </button>
+            }
+        </div>
+    </div>
+}

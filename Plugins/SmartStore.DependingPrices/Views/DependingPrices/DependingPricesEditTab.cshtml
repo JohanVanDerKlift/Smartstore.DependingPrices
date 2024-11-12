@@ -1,0 +1,262 @@
+﻿@model DependingPricesTabModel
+@using SmartStore.Web.Framework;
+@using SmartStore.Web.Framework.UI;
+@using Telerik.Web.Mvc.UI;
+@using SmartStore.DependingPrices.Models;
+@{
+	Layout = "";
+}
+
+@* VERY IMPORTANT for proper model binding *@
+@Html.Hidden("__Type__", Model.GetType().AssemblyQualifiedName)
+
+@Html.HiddenFor(m => m.ProductId)
+
+<style type="text/css">
+	#tab-dependingprices {
+		min-height: 700px;
+	}
+</style>
+
+<script>
+
+	$(function () {
+		$(document).on("click", ".add-criteria", function (e) {
+			e.preventDefault();
+
+			@if (Model.IsPluginConfig)
+			{
+				<Text>
+					var form = $("#add-new-criteria");
+					$.ajax({
+						cache: false,
+						type: 'POST',
+						url: '@Url.Action("AddCriteria")',
+						data: {
+							itemGroupId: $("#CustomProperties\\[DependingPrices\\]_ItemGroupId").val(),
+                            price: $("#CustomProperties\\[DependingPrices\\]_Price").val(),
+                            quantity: $("#CustomProperties\\[DependingPrices\\]_Quantity").val(),
+							calculationMethod: $("#@Html.FieldIdFor(x => x.CalculationMethod)").val(),
+							customerGroupId: $("#@Html.FieldIdFor(x => x.CustomerGroupId)").val(),
+							storeId: $("#@Html.FieldIdFor(x => x.StoreId)").val(),
+                            languageId: $("#@Html.FieldIdFor(x => x.LanguageId)").val(),
+                            customerNumber: $("#@Html.FieldIdFor(x => x.CustomerNumber)").val()
+						},
+						dataType: 'json',
+						success: function (data) {
+							var dependingPricesGrid = $("#depending-prices-grid");
+							dependingPricesGrid.data('tGrid').ajaxRequest();
+						},
+						error: function (xhr, ajaxOptions, thrownError) {
+							alert('Failed to update record.');
+						}
+					});
+				</Text>
+			}
+			else
+			{
+				<Text>
+					$("button[value='save-continue']").trigger("click");
+				</Text>
+			}
+		});
+	});
+
+	function OnGridEdit(e) {
+		if (e.mode == "edit") {
+
+			$('#Store')
+				.data('select-selected-id', e.dataItem['StoreId'])
+				.data('select-init-text', e.dataItem['Store'])
+				.val(e.dataItem['StoreId'])
+				.trigger('change');
+
+			$('#CustomerGroup')
+				.data('select-selected-id', e.dataItem['CustomerGroupId'])
+				.data('select-init-text', e.dataItem['CustomerGroup'])
+				.val(e.dataItem['CustomerGroupId'])
+				.trigger('change');
+
+			$('#CalculationMethod')
+				.data('select-selected-id', e.dataItem['CalculationMethodId'])
+				.data('select-init-text', e.dataItem['CalculationMethod'])
+				.val(e.dataItem['CalculationMethodId'])
+				.trigger('change');
+
+			$('#Language')
+				.data('select-selected-id', e.dataItem['LanguageId'])
+				.data('select-init-text', e.dataItem['Language'])
+				.val(e.dataItem['LanguageId'])
+				.trigger('change');
+
+			$('#CustomProperties[DependingPrices]_FilterDecimal')
+				.val(e.dataItem['FilterDecimal'])
+				.trigger('change');
+
+			$('#CustomProperties[DependingPrices]_ItemGroupId')
+				.val(e.dataItem['ItemGroupId'])
+                .trigger('change');
+
+            $('#CustomProperties[DependingPrices]_CustomerNumber')
+                .val(e.dataItem['CustomerNumber'])
+                .trigger('change');
+		}
+	}
+</script>
+
+@(Html.Telerik().Grid<FilterCriteria>()
+        .Name("depending-prices-grid")
+        .DataKeys(keys =>
+        {
+            keys.Add(y => y.Id);
+        })
+        .DataBinding(dataBinding =>
+        {
+            dataBinding.Ajax()
+                .Select("CriteriaList", "DependingPrices", new { productId = Model.ProductId, area = "SmartStore.DependingPrices" })
+                .Update("DependingPriceUpdate", "DependingPrices", new { area = "SmartStore.DependingPrices" })
+                .Delete("DependingPriceDelete", "DependingPrices", new { area = "SmartStore.DependingPrices" });
+        })
+        .Columns(c =>
+        {
+            c.Bound(x => x.ProductId).Visible(false);
+            if (Model.IsPluginConfig)
+            {
+                c.Bound(x => x.ItemGroupId);
+            }
+            c.Bound(x => x.FilterDecimal).Format("{0:0.0000}").Width("15%");
+            c.Bound(x => x.Quantity).Width("15%");
+            c.Bound(x => x.CalculationMethod).Width("15%");
+            c.Bound(x => x.CustomerGroup).Width("15%");
+            c.Bound(x => x.CustomerNumber).Width("15%");
+            c.Bound(x => x.Store).Width("5%");
+            c.Bound(x => x.Language).Width("15%");
+            c.Command(commands =>
+            {
+                commands.Edit().Localize(T);
+                commands.Delete().Localize(T);
+            })
+            .HtmlAttributes(new { align = "right" });
+        })
+        .ClientEvents(e => { e.OnEdit("OnGridEdit"); })
+        .EnableCustomBinding(true)
+        .Pageable(settings => settings.PageSize(25).Position(GridPagerPosition.Both))
+        .Footer(false)
+)
+
+
+<table class="adminContent">
+    <tr>
+        <td colspan="2">
+            <div class="admin-config-group">
+                <div class="head">@T("Plugins.SmartStore.DependingPrices.AddNewCriteria")</div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.SmartLabelFor(model => model.Price)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Price)
+            @Html.ValidationMessageFor(model => model.Price)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.SmartLabelFor(model => model.Quantity)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Quantity)
+            @Html.ValidationMessageFor(model => model.Quantity)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.SmartLabelFor(model => model.CalculationMethod)
+        </td>
+        <td class="adminData">
+            @Html.DropDownListForEnum(model => model.CalculationMethod)
+            @Html.ValidationMessageFor(model => model.CalculationMethod)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.SmartLabelFor(model => model.CustomerNumber)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CustomerNumber)
+            @Html.ValidationMessageFor(model => model.CustomerNumber)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.SmartLabelFor(model => model.CustomerGroupId)
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.CustomerGroupId, Model.AvailableCustomerRoles)
+            @Html.ValidationMessageFor(model => model.CustomerGroupId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.SmartLabelFor(model => model.StoreId)
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.StoreId, Model.AvailableStores)
+            @Html.ValidationMessageFor(model => model.StoreId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.SmartLabelFor(model => model.LanguageId)
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.LanguageId, Model.AvailableLanguages)
+            @Html.ValidationMessageFor(model => model.LanguageId)
+        </td>
+    </tr>
+    @if (Model.IsPluginConfig)
+    {
+        <tr>
+            <td class="adminTitle">
+                @Html.SmartLabelFor(model => model.ItemGroupId)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ItemGroupId)
+                @Html.ValidationMessageFor(model => model.ItemGroupId)
+            </td>
+        </tr>
+    }
+    <tr>
+        <td class="adminTitle"></td>
+        <td class="adminData">
+            <button type="submit" class="btn btn-warning add-criteria">
+                <i class="fa fa-check"></i>
+                <span>@T("Admin.Common.Save")</span>
+            </button>
+        </td>
+    </tr>
+
+    @if (!Model.IsPluginConfig)
+    {
+        <tr>
+            <td colspan="2">
+                <div class="admin-config-group">
+                    <div class="head">@T("Plugins.SmartStore.DependingPrices.ItemGroupId")</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.SmartLabelFor(model => model.ItemGroupId)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ItemGroupId)
+                @Html.ValidationMessageFor(model => model.ItemGroupId)
+            </td>
+        </tr>
+    }
+</table>
+
+<div>@ViewBag.ItemGroupId</div>

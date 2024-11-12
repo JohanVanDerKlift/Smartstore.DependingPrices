@@ -1,0 +1,126 @@
+﻿@model BestsellersReportModel
+@using Telerik.Web.Mvc.UI
+@{
+    ViewBag.Title = T("Admin.SalesReport.Bestsellers").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <i class="fa fa-thumbs-up"></i>
+            @T("Admin.SalesReport.Bestsellers")
+        </div>
+        <div class="options">
+        </div>
+    </div>
+
+	<div class="row mt-3 grid-filter">
+		<div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+			@Html.SmartLabelFor(model => model.StartDate)
+			@Html.EditorFor(model => model.StartDate)
+		</div>
+		<div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+			@Html.SmartLabelFor(model => model.EndDate)
+			@Html.EditorFor(model => model.EndDate)
+		</div>
+		<div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+			@Html.SmartLabelFor(model => model.OrderStatusId)
+			@Html.DropDownListFor(model => model.OrderStatusId, Model.AvailableOrderStatuses, T("Admin.Common.All"))
+		</div>
+		<div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+			@Html.SmartLabelFor(model => model.PaymentStatusId)
+			@Html.DropDownListFor(model => model.PaymentStatusId, Model.AvailablePaymentStatuses, T("Admin.Common.All"))
+		</div>
+		<div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+			@Html.SmartLabelFor(model => model.ShippingStatusId)
+			@Html.DropDownListFor(model => model.ShippingStatusId, Model.AvailableShippingStatuses, T("Admin.Common.All"))
+		</div>
+
+		<div class="col-sm-6 col-lg-4 col-xl-3 form-group">
+            @Html.SmartLabel(string.Empty, string.Empty)
+			<button type="submit" id="btnSearch" value="btnSearch" class="btn btn-secondary btn-block">
+				<span>@T("Admin.Common.ApplyFilter")</span>
+			</button>
+		</div>
+	</div>
+
+    <div>
+		@(Html.Telerik().Grid<BestsellersReportLineModel>()
+            .Name("salesreport-grid")
+            .ClientEvents(events =>
+            {
+                events.OnRowDataBound("onRowDataBound");
+                events.OnDataBinding("onDataBinding");
+            })
+            .Columns(columns =>
+            {
+				if (Model.DisplayProductPictures)
+				{
+					columns.Bound(x => x.PictureThumbnailUrl)
+						.Sortable(false)
+                        .Centered()
+						.Width(120)
+						.ClientTemplate("<div class='zoomable-thumb-container'><img alt='<#= ProductId #>' src='<#= PictureThumbnailUrl #>' <# if (!NoThumb) {#> class='zoomable-thumb' <# } #> /></div>");
+				}
+                columns.Bound(x => x.ProductName)
+                    .Sortable(false)
+                    .ClientTemplate(Html.LabeledProductName("ProductId", "ProductName"));
+				columns.Bound(x => x.Sku)
+                    .Sortable(false);
+				columns.Bound(x => x.Price)
+                    .Sortable(false)
+					.Format("{0:0.00}")
+					.RightAlign();
+				columns.Bound(x => x.StockQuantity)
+                    .Sortable(false)
+					.Centered();
+                columns.Bound(x => x.TotalQuantity)
+                    .Centered()
+                    .Width(200);
+                columns.Bound(x => x.TotalAmount)
+                    .RightAlign()
+                    .Width(200);
+            })
+            .Pageable(settings => settings.PageSize(Model.GridPageSize).Position(GridPagerPosition.Both))
+            .Sortable(x =>
+            {
+                x.AllowUnsort(true);
+                x.SortMode(GridSortMode.SingleColumn);
+                x.OrderBy(o => o.Add(y => y.TotalAmount).Descending());
+            })
+            .DataBinding(dataBinding => dataBinding.Ajax().Select("BestsellersReportList", "Order"))
+            .PreserveGridState()
+            .EnableCustomBinding(true))
+	</div>
+    
+    <script>
+        $(function () {
+            $("#salesreport-grid").thumbZoomer();
+
+            $('#btnSearch').click(function () {
+				var grid = $('#salesreport-grid').data('tGrid');
+				// New search. Set page size to 1.
+                grid.currentPage = 1;
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+        function onRowDataBound(e) {
+			if (e.dataItem.TotalQuantity && e.dataItem.TotalQuantity === "0") {
+				$(e.row).find('td').wrapInner('<span class="muted" />');
+			}
+		}
+
+        function onDataBinding(e) {
+            var searchModel = {
+                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
+                PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
+                ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val()
+            };
+            e.data = searchModel;
+        }
+    </script>
+}

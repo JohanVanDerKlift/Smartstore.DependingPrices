@@ -1,0 +1,24 @@
+﻿@model IList<RegisteredCustomerReportLineModel>
+
+<div class="card shadow-sm mb-4 w-50">
+    <div class="table-responsive">
+        <table class="table table-striped m-0">
+            <thead>
+                <tr>
+                    <th class="w-25">@T("Admin.Customers.Reports.RegisteredCustomers.Fields.Period")</th>
+                    <th class="text-center">@T("Admin.Customers.Reports.RegisteredCustomers.Fields.Customers")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Period</td>
+                        <td class="text-center">@item.Customers.ToString("N0")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

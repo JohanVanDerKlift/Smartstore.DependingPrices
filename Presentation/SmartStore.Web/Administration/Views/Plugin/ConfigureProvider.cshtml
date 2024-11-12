@@ -1,0 +1,78 @@
+﻿@model SmartStore.Web.Framework.Plugins.ProviderModel
+
+@{
+	ViewBag.Title = T("Admin.Common.Configure").Text + " - " + Model.FriendlyName;
+}
+
+@Html.AntiForgeryToken()
+
+<script>
+	$(function () {
+		SmartStore.Admin.movePluginActionButtons();
+	});
+</script>
+
+<div class="section-header">
+	<div class="title" title="@ViewBag.Title (@Model.SystemName)">
+		<img src="@Url.Content(Model.IconUrl)" alt="@Model.FriendlyName" />
+		@ViewBag.Title
+		<a href="@ViewBag.ListUrl">(@T("Admin.Common.BackToList"))</a>
+	</div>
+	@if (Model.PluginDescriptor != null)
+	{
+		<div class="options">
+			<a class="update-string-resources btn btn-secondary" href='@Url.Action("UpdateStringResources", "Plugin")' data-system-name="@Model.PluginDescriptor.SystemName">
+				<i class="fa fa-sync"></i>
+				<span>@T("Admin.Configuration.Plugins.Resources.Update")</span>
+			</a>
+		</div>
+	}
+</div>
+
+<div class="plugin-config-container">
+	@if (Model.ConfigurationRoute != null && Model.ConfigurationRoute.Action.HasValue())
+	{
+		try
+		{
+			Html.RenderAction(Model.ConfigurationRoute.Action, Model.ConfigurationRoute.Controller, Model.ConfigurationRoute.RouteValues);
+		}
+		catch (Exception exception)
+		{
+			<div class="alert alert-danger">
+				@T("Admin.Configuration.Plugins.UnknownError")
+			</div>
+
+			<pre>@exception.ToString()</pre>
+		}
+	}
+	else
+	{
+		@T("Admin.Common.ConfigurationNotRequired")
+	}
+</div>
+
+<script>
+	$(function () {
+		var token = $('input[name="__RequestVerificationToken"]').val();
+
+		$(".update-string-resources").on("click", function (e) {
+            e.preventDefault();
+
+            var $el = $(this);
+
+            $({}).doAjax({
+			    type: 'POST',
+			    url: $el.attr("href"),
+                data: {
+                    "__RequestVerificationToken": token,
+                    "systemName": $el.attr("data-system-name")
+                },
+				callbackSuccess: function (data) {
+					displayNotification(data.Message, data.Success ? "success" : "error");
+				}
+            });
+
+			return false;
+        })
+    });
+</script>

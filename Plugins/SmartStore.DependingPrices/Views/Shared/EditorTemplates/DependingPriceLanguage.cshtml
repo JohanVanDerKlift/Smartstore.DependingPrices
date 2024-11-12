@@ -1,0 +1,12 @@
+﻿<select name="Language"
+	id="Language"
+	class="form-control"
+	data-placeholder='@T("Admin.Common.All")'
+	data-select-url='@Url.Action("AllLanguages", "DependingPrices", new { area = "SmartStore.DependingPrices" })'>
+</select>
+
+<script>
+    $(function () {
+		$('#Language').selectWrapper();
+    });
+</script>
