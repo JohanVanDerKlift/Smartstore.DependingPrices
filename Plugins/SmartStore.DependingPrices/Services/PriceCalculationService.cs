@@ -145,8 +145,8 @@ namespace SmartStore.Services.Catalog
             PriceCalculationContext context = null,
             bool isTierPrice = false)
         {
-            if (!DependingPrices.Plugin.CheckLicense())
-                return base.GetFinalPrice(product, customer, additionalCharge, includeDiscounts, quantity, bundleItem, context, isTierPrice);
+            //if (!DependingPrices.Plugin.CheckLicense())
+            //    return base.GetFinalPrice(product, customer, additionalCharge, includeDiscounts, quantity, bundleItem, context, isTierPrice);
 
             var dependingPricesSettings = _settingService.LoadSetting<DependingPricesSettings>(_services.StoreContext.CurrentStore.Id);
             var isVariant = product.MergedDataValues != null && product.MergedDataValues.Count > 0;
@@ -280,8 +280,8 @@ namespace SmartStore.Services.Catalog
         public override decimal GetProductVariantAttributeValuePriceAdjustment(ProductVariantAttributeValue attributeValue,
             Product product, Customer customer, PriceCalculationContext context, int productQuantity = 1)
         {
-            if (!DependingPrices.Plugin.CheckLicense() || true)
-                return base.GetProductVariantAttributeValuePriceAdjustment(attributeValue, product, customer, context, productQuantity);
+            //if (!DependingPrices.Plugin.CheckLicense() || true)
+            //    return base.GetProductVariantAttributeValuePriceAdjustment(attributeValue, product, customer, context, productQuantity);
 
             Guard.NotNull(attributeValue, nameof(attributeValue));
 
