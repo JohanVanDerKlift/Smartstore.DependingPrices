@@ -93,7 +93,7 @@ namespace SmartStore.DependingPrices.Services
 				quantity = 1;
 
 			var dependingPrices = new List<DependingPricesRecord>();
-            var customerRoles = customer.CustomerRoleMappings.Select(x => x.CustomerRole).Where(cr => cr.Active);
+            var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
 			var dependingPrice = new DependingPricesRecord();
             var tempDependingPrice = new DependingPricesRecord();
             var roles = (from gp in _cbRepository.Table select gp.CustomerGroupId).Distinct().ToList();
@@ -211,6 +211,9 @@ namespace SmartStore.DependingPrices.Services
                 tempDependingPrice = (from gp in _cbRepository.Table                                     
                                       where gp.Quantity <= quantity
                                       && gp.ProductId == productId
+                                      && gp.CustomerNumber == "0"
+                                      && gp.CustomerGroupId == 0
+                                      && gp.ItemGroupId == 0
                                       orderby gp.Quantity descending
                                       select gp).ToList().FirstOrDefault();
 

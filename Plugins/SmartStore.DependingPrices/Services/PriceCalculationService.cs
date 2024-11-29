@@ -93,47 +93,47 @@ namespace SmartStore.Services.Catalog
         /// <returns>Final price</returns>
         /// 
 
-        public override decimal GetPercentage(
-            Product product,
-            Customer customer,
-            decimal additionalCharge,
-            bool includeDiscounts,
-            int quantity,
-            ProductBundleItemData bundleItem = null,
-            PriceCalculationContext context = null,
-            bool isTierPrice = false)
-        {
-            if (!DependingPrices.Plugin.CheckLicense())
-                return base.GetPercentage(product, customer, additionalCharge, includeDiscounts, quantity, bundleItem, context, isTierPrice);
+        //public override decimal GetPercentage(
+        //    Product product,
+        //    Customer customer,
+        //    decimal additionalCharge,
+        //    bool includeDiscounts,
+        //    int quantity,
+        //    ProductBundleItemData bundleItem = null,
+        //    PriceCalculationContext context = null,
+        //    bool isTierPrice = false)
+        //{
+        //    if (!DependingPrices.Plugin.CheckLicense())
+        //        return base.GetPercentage(product, customer, additionalCharge, includeDiscounts, quantity, bundleItem, context, isTierPrice);
 
-            var dependingPricesSettings = _settingService.LoadSetting<DependingPricesSettings>(_services.StoreContext.CurrentStore.Id);
-            var isVariant = product.MergedDataValues != null && product.MergedDataValues.Count > 0;
-            if (isVariant)
-            {
-                if (!dependingPricesSettings.ProcessVariantCombinations)
-                {
-                    return base.GetPercentage(product, customer, additionalCharge, includeDiscounts, quantity, bundleItem, context, isTierPrice);
-                }
-            }
+        //    var dependingPricesSettings = _settingService.LoadSetting<DependingPricesSettings>(_services.StoreContext.CurrentStore.Id);
+        //    var isVariant = product.MergedDataValues != null && product.MergedDataValues.Count > 0;
+        //    if (isVariant)
+        //    {
+        //        if (!dependingPricesSettings.ProcessVariantCombinations)
+        //        {
+        //            return base.GetPercentage(product, customer, additionalCharge, includeDiscounts, quantity, bundleItem, context, isTierPrice);
+        //        }
+        //    }
 
-            var currentCustomerRoles = _services.WorkContext.CurrentCustomer.CustomerRoleMappings.Select(x => x.CustomerRole).Where(cr => cr.Active);
-            var itemGroupId = _genericAttributeService.GetAttribute<int>("Product", product.Id, "ItemGroupId");
-            var dependingPrice = _dependingPricesService.GetBestFittingDependingPriceRecord(
-                product.Id,
-                _services.WorkContext.CurrentCustomer,
-                _services.WorkContext.WorkingLanguage.Id,
-                _services.StoreContext.CurrentStore.Id,
-                itemGroupId,
-                quantity);
-            decimal percentage = 0;
+        //    var currentCustomerRoles = _services.WorkContext.CurrentCustomer.CustomerRoleMappings.Select(x => x.CustomerRole).Where(cr => cr.Active);
+        //    var itemGroupId = _genericAttributeService.GetAttribute<int>("Product", product.Id, "ItemGroupId");
+        //    var dependingPrice = _dependingPricesService.GetBestFittingDependingPriceRecord(
+        //        product.Id,
+        //        _services.WorkContext.CurrentCustomer,
+        //        _services.WorkContext.WorkingLanguage.Id,
+        //        _services.StoreContext.CurrentStore.Id,
+        //        itemGroupId,
+        //        quantity);
+        //    decimal percentage = 0;
 
-            if (dependingPrice != null)
-            {
-                percentage = dependingPrice.Price;
-            }            
+        //    if (dependingPrice != null)
+        //    {
+        //        percentage = dependingPrice.Price;
+        //    }            
 
-            return percentage;
-        }
+        //    return percentage;
+        //}
 
 		public override decimal GetFinalPrice(
 			Product product, 
@@ -190,7 +190,7 @@ namespace SmartStore.Services.Catalog
             }
 
             // BEGIN: added for plugin
-			var currentCustomerRoles = _services.WorkContext.CurrentCustomer.CustomerRoleMappings.Select(x => x.CustomerRole).Where(cr => cr.Active);
+			var currentCustomerRoles = _services.WorkContext.CurrentCustomer.CustomerRoles.Where(cr => cr.Active);
 			var itemGroupId = _genericAttributeService.GetAttribute<int>("Product", product.Id, "ItemGroupId");
 			var dependingPrice = _dependingPricesService.GetBestFittingDependingPriceRecord(
 				product.Id, 

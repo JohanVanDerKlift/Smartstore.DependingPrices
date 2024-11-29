@@ -1,9 +1,9 @@
 ﻿FriendlyName: Depending Prices
 SystemName: SmartStore.DependingPrices
 Group: Sales
-Version: 4.0.1
-MinAppVersion: 4.0.1
-Author: Michael Herzog
+Version: 3.2.2
+MinAppVersion: 3.2.2
+Author: KOOMBA b.v.
 DisplayOrder: 1
 FileName: SmartStore.DependingPrices.dll
 ResourceRootKey: Plugins.SmartStore.DependingPrices

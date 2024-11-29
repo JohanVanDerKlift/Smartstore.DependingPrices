@@ -122,7 +122,7 @@ namespace SmartStore.DependingPrices.Controllers
 			if (productId != null)
 			{
 				var dependingPricesSettings = _settingService.LoadSetting<DependingPricesSettings>(_services.StoreContext.CurrentStore.Id);
-				var currentCustomerRoles = _services.WorkContext.CurrentCustomer.CustomerRoleMappings.Select(x => x.CustomerRole).Where(cr => cr.Active);
+				var currentCustomerRoles = _services.WorkContext.CurrentCustomer.CustomerRoles.Where(cr => cr.Active);
 				var itemGroupId = _genericAttributeService.GetAttribute<int>("Product", (int)productId, "ItemGroupId");
 				var dependingPrice = _dependingPricesService.GetBestFittingDependingPriceRecord(
 					(int)productId, _services.WorkContext.CurrentCustomer, _services.WorkContext.WorkingLanguage.Id, _services.StoreContext.CurrentStore.Id, itemGroupId);
@@ -170,7 +170,7 @@ namespace SmartStore.DependingPrices.Controllers
 
 				if (productId != 0)
 				{
-					var currentCustomerRoles = _services.WorkContext.CurrentCustomer.CustomerRoleMappings.Select(x => x.CustomerRole).Where(cr => cr.Active);
+					var currentCustomerRoles = _services.WorkContext.CurrentCustomer.CustomerRoles.Where(cr => cr.Active);
 					var itemGroupId = _genericAttributeService.GetAttribute<int>("Product", productId, "ItemGroupId");
 					var dependingPrice = _dependingPricesService.GetBestFittingDependingPriceRecord(
 						productId, _services.WorkContext.CurrentCustomer, _services.WorkContext.WorkingLanguage.Id, _services.StoreContext.CurrentStore.Id, itemGroupId);
